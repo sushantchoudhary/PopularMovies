@@ -12,4 +12,4 @@ https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.t
 
 # Demo 
 
-![](name-of-giphy.gif)
+![](popularmovies.gif)
