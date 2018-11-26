@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
      */
     private void showErrorMessage() {
         new AlertDialog.Builder(this)
-                .setTitle("W00t, something failed")
-                .setMessage("Please check network connection and try again")
-                .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.network_error)
+                .setMessage(R.string.network_error_msg)
+                .setNegativeButton(R.string.error_dismiss_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
