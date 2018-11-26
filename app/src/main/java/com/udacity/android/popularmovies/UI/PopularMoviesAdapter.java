@@ -23,7 +23,7 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
 
 
     public interface PopularMoviesAdapterOnClickHandler {
-        void onClick(Integer movieUrl);
+        void onClick(MovieRecord movieRecord);
     }
 
     public PopularMoviesAdapter(List<MovieRecord> mMovieStoreList, PopularMoviesAdapterOnClickHandler onClickHandler) {
@@ -46,9 +46,7 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
             MovieRecord movieDetail = mMovieStoreList.get(adapterPosition);
-
-            moviesAdapterOnClickHandler.onClick(movieDetail.getId());
-
+            moviesAdapterOnClickHandler.onClick(movieDetail);
         }
     }
 

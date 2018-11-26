@@ -88,14 +88,14 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
      * clicks.
      *
-     * @param movieId Id of movie record in the database
+     * @param movieRecord Id of movie record in the database
      */
     @Override
-    public void onClick(Integer movieId) {
+    public void onClick(MovieRecord movieRecord) {
         Context context = this;
         Class destinationClass = MovieDetailsActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieId);
+        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieRecord);
         startActivity(intentToStartDetailActivity);
     }
 
