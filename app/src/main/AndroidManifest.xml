@@ -3,6 +3,9 @@
           package="com.udacity.android.popularmovies">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <!--
     Launcher icon source :
     https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=4k&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgba(67%2C%20149%2C%2067%2C%200)&backColor=rgb(68%2C%20138%2C%20255)&crop=0&backgroundShape=circle&effects=elevate&name=ic_popular_movies
@@ -21,7 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".UI.MovieDetailsActivity">
+        <activity
+                android:name=".UI.MovieDetailsActivity"
+                android:parentActivityName=".UI.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".UI.MainActivity"/>
+        </activity>
+        <activity android:name=".UI.MovieTrailerActivity">
         </activity>
     </application>
 

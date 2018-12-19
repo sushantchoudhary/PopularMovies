@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout android:layout_width="48dp"
+             android:layout_height="48dp"
+             xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="32dp"
+                 android:layout_height="32dp"
+                 android:layout_gravity="center"
+                 android:background="?android:attr/actionBarItemBackground"
+                 android:clickable="true" android:focusable="true"
+    >
+        <ToggleButton android:id="@+id/button_favorite"
+                      android:layout_width="28dp"
+                      android:layout_height="28dp"
+                      android:background="@drawable/button_favorite"
+                      android:checked="false"
+                      android:textOff=""
+                      android:textOn=""
+                      android:layout_gravity="center"
+                      android:contentDescription="@string/action_favorite"
+                      android:tooltipText="@string/add_favorite"
+                      android:clickable="true" android:focusable="true"
+        />
+
+    </FrameLayout>
+</FrameLayout>
