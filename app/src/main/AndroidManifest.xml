@@ -11,13 +11,16 @@
     https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=4k&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgba(67%2C%20149%2C%2067%2C%200)&backColor=rgb(68%2C%20138%2C%20255)&crop=0&backgroundShape=circle&effects=elevate&name=ic_popular_movies
     -->
     <application
+            android:name=".app.PopularApplication"
             android:allowBackup="true"
             android:icon="@mipmap/ic_popular_movies"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_popular_movies"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".UI.MainActivity">
+        <activity
+                android:name=".ui.MainActivity"
+                android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,13 +28,15 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".UI.MovieDetailsActivity"
-                android:parentActivityName=".UI.MainActivity">
+                android:name=".ui.MovieDetailsActivity"
+                android:parentActivityName=".ui.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".UI.MainActivity"/>
+                    android:value=".ui.MainActivity"/>
         </activity>
-        <activity android:name=".UI.MovieTrailerActivity">
+        <activity android:name=".ui.MovieTrailerActivity">
+        </activity>
+        <activity android:name=".ui.FavMoviesActivity">
         </activity>
     </application>
 

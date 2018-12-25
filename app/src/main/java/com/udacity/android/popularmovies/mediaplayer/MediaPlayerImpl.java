@@ -31,17 +31,17 @@ public class MediaPlayerImpl implements MediaPlayer {
 
     @Override
     public void play(String url) {
-       String userAgent =  Util.getUserAgent(context, context.getString(R.string.app_name));
-       ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(context, userAgent))
+        String userAgent = Util.getUserAgent(context, context.getString(R.string.app_name));
+        ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(context, userAgent))
                 .setExtractorsFactory(new DefaultExtractorsFactory())
                 .createMediaSource(Uri.parse(url));
-       player.prepare(mediaSource);
-       player.setPlayWhenReady(true);
+        player.prepare(mediaSource);
+        player.setPlayWhenReady(true);
     }
 
     @Override
     public ExoPlayer getMediaPlayer(Context context) {
-        this.context =context;
+        this.context = context;
         initializePlayer();
         return player;
     }

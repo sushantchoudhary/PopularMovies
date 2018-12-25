@@ -9,8 +9,8 @@
                android:layout_width="match_parent"
                android:layout_height="0dp"
                android:contentDescription="@string/movie_poster_content_description"
-    android:layout_weight="1"
-    android:adjustViewBounds="true"
-    android:scaleType="fitCenter"
+               android:layout_weight="1"
+               android:adjustViewBounds="true"
+               android:scaleType="fitCenter"
     />
 </LinearLayout>

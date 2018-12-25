@@ -4,13 +4,18 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
-<item
-        android:id="@+id/action_sortbypopularity"
-        android:orderInCategory="1"
-        android:title="@string/action_sortbypopularity"
-        app:showAsAction="never"/>
-<item
-        android:id="@+id/action_sortbytoprated"
-        android:title="@string/action_sortbytoprated"
-        app:showAsAction="never" />
+    <item
+            android:id="@+id/action_sortbypopularity"
+            android:orderInCategory="1"
+            android:title="@string/action_sortbypopularity"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_sortbytoprated"
+            android:title="@string/action_sortbytoprated"
+            app:showAsAction="never"/>
+
+    <item
+            android:id="@+id/action_sortbyfavorites"
+            android:title="@string/action_sortbyfavourites"
+            app:showAsAction="never"/>
 </menu>

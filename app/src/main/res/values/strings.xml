@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Popular Movies</string>
+    <string name="app_name">Movies Kaleidoscope</string>
     <string name="error_message">An error has occurred. Please try again.</string>
 
     <!-- Content descriptions-->
@@ -7,6 +7,9 @@
 
     <string name="action_sortbypopularity">Most popular</string>
     <string name="action_sortbytoprated">Highest rated</string>
+    <string name="action_sortbyfavourites">My Favourite</string>
+
+
     <string name="movie_duration">min</string>
     <string name="max_rating">/10</string>
     <string name="network_error">W00t, something failed</string>
