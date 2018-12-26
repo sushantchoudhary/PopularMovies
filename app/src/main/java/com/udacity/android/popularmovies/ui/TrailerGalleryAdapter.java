@@ -2,7 +2,6 @@ package com.udacity.android.popularmovies.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;

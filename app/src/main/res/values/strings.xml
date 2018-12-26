@@ -19,4 +19,6 @@
 
     <string name="action_favorite">Favorite</string>
     <string name="add_favorite">Add Favorite</string>
+    <string name="reviews"><u>Reviews</u></string>
+    <string name="review_placeholder">No reviews found !</string>
 </resources>

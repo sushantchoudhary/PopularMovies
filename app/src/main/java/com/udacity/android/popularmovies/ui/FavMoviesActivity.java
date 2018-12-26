@@ -37,7 +37,6 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAdapter.FavMoviesAdapterOnClickHandler {
 
@@ -46,17 +45,13 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
     private static final String TAG = FavMoviesActivity.class.getSimpleName();
     private static final Integer SPAN_COUNT = 2;
     private static AppDatabase mDB;
-    private static List<MovieRecord> favAdapterData = new ArrayList<>();
     private static Boolean IsRestarting;
     private RecyclerView mFavMovieLayout;
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
-    private ArrayList<MovieRecord> mMovieList;
-    private ArrayList<MovieRecord> mPopMovieList;
     private FavMoviesAdapter favMoviesAdapter;
     private SortType preferredSort;
     private List<Long> allMovies = Collections.emptyList() ;
-    private MovieRecord favMovieRecord;
 
 
 
@@ -77,6 +72,7 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
 
         mDB = AppDatabase.getsInstance(getApplicationContext());
 
+        FavMoviesActivity.this.setTitle("My favorites");
 
         if (savedInstanceState != null) {
             // Restore value of members from saved state
@@ -157,7 +153,6 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
             mFavMovieLayout.setAdapter(favMoviesAdapter);
             //TODO : Fix this call {Skipping layout, no adapter found..}
 //            favMoviesAdapter.setMoviesData(movieRecords);
-            FavMoviesActivity.this.setTitle("My favorites");
         });
     }
 
@@ -173,20 +168,6 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
     private void showMoviewGridView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mFavMovieLayout.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * This method will show an error message and hide the Popular Movies
-     * View.
-     * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
-     */
-    private void showErrorMessage() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.network_error)
-                .setMessage(R.string.network_error_msg)
-                .setNegativeButton(R.string.error_dismiss_button, (dialog, which) -> finish()).create().show();
     }
 
 
@@ -215,9 +196,6 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
              mDB.movieDao().insertMovieList(movieStore.getResults());
             return callpopmoviedb;
         }).subscribeOn(Schedulers.io())
-                /**
-                 * Ugly delay to wait for DB transaction to complete in OnNext
-                 */
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MovieStore>() {
                     @Override
@@ -262,30 +240,34 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
         @Override
         protected Void doInBackground(MovieSnapshot... movieSnapshots) {
             LiveData<MovieRecord> movieRecordLiveData = mDB.movieDao().loadMovieById(movieSnapshots[0].getId());
-            Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@"+ movieSnapshots[0].getTitle());
-            movieRecordLiveData.observe(FavMoviesActivity.this, new android.arch.lifecycle.Observer<MovieRecord>() {
-                @Override
-                public void onChanged(MovieRecord movieRecord) {
-//                    favMovieRecord = movieRecord;
-                    Log.d(TAG, "*******************"+movieRecord.getTitle());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Context context = FavMoviesActivity.this;
-                            Class destinationClass = MovieDetailsActivity.class;
-                            Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-                            intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieRecord);
-                            Log.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$");
-                            startActivity(intentToStartDetailActivity);
-                        }
-                    });
+            movieRecordLiveData.observe(FavMoviesActivity.this, movieRecord -> {
+                runOnUiThread(() -> {
+                    Context context = FavMoviesActivity.this;
+                    Class destinationClass = MovieDetailsActivity.class;
+                    Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+                    intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieRecord);
+                    startActivity(intentToStartDetailActivity);
+                });
 
-                }
             });
             //FIXME State need to be updated to handle storage better
             return null;
         }
 
+    }
+
+    /**
+     * This method will show an error message and hide the Popular Movies
+     * View.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't
+     * need to check whether each view is currently visible or invisible.
+     */
+    private void showErrorMessage() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.network_error)
+                .setMessage(R.string.network_error_msg)
+                .setNegativeButton(R.string.error_dismiss_button, (dialog, which) -> finish()).create().show();
     }
 
 }

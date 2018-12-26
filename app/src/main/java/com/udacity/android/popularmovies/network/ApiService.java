@@ -1,6 +1,7 @@
 package com.udacity.android.popularmovies.network;
 
 import com.udacity.android.popularmovies.model.MovieDetail;
+import com.udacity.android.popularmovies.model.MovieReviews;
 import com.udacity.android.popularmovies.model.MovieStore;
 import com.udacity.android.popularmovies.model.MovieVideos;
 import io.reactivex.Observable;
@@ -27,7 +28,8 @@ public interface ApiService {
     @GET("{movie_id}/videos")
     Call<MovieVideos> getMovieVideo(@Path("movie_id") int movie_id, @Query("api_key") String api_key);
 
-    @GET("{movie_id}")
-    Call<MovieDetail> getMovieDetail(@Path("movie_id") int movie_id, @Query("api_key") String api_key);
+    @GET("{movie_id}/reviews")
+    Call<MovieReviews> getMovieReview(@Path("movie_id") int movie_id, @Query("api_key") String api_key);
+
 
 }

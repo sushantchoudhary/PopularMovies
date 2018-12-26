@@ -7,13 +7,11 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
-import com.udacity.android.popularmovies.model.FavMovies;
-import com.udacity.android.popularmovies.model.MovieDetail;
-import com.udacity.android.popularmovies.model.MovieRecord;
-import com.udacity.android.popularmovies.model.MovieSnapshot;
+import com.udacity.android.popularmovies.model.*;
 
-@Database(entities = {MovieRecord.class, FavMovies.class, MovieDetail.class, MovieSnapshot.class}, version = 1, exportSchema = false)
-@TypeConverters(MovieTypeConverters.class)
+@Database(entities = {MovieRecord.class, FavMovies.class,
+        MovieDetail.class, MovieSnapshot.class, MovieReviews.class, ReviewResult.class}, version = 1, exportSchema = false)
+@TypeConverters({MovieTypeConverters.class, ReviewTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
@@ -42,4 +40,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MovieSnapshotDao movieSnapshotDao();
 
+    public abstract ReviewsDao movieReviewsDao();
+
+    public abstract MovieReviewDao reviewDao();
 }

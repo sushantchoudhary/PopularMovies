@@ -1,13 +1,11 @@
 package com.udacity.android.popularmovies.ui;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -167,15 +165,12 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
 
     private void setupMainViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getMovies().observe(this, new Observer<List<MovieRecord>>() {
-            @Override
-            public void onChanged(@Nullable List<MovieRecord> movieRecords) {
-                Log.d(TAG, "Updating movies from LiveData in ViewModel");
-                popularMoviesAdapter = new PopularMoviesAdapter(movieRecords, MainActivity.this);
-                mPopMovieLayout.setAdapter(popularMoviesAdapter);
-                //TODO : Fix this call {Skipping layout, no adapter found..}
+        viewModel.getMovies().observe(this, movieRecords -> {
+            Log.d(TAG, "Updating movies from LiveData in ViewModel");
+            popularMoviesAdapter = new PopularMoviesAdapter(movieRecords, MainActivity.this);
+            mPopMovieLayout.setAdapter(popularMoviesAdapter);
+            //TODO : Fix this call {Skipping layout, no adapter found..}
 //              popularMoviesAdapter.setMoviesData(movieRecords);
-            }
         });
     }
 

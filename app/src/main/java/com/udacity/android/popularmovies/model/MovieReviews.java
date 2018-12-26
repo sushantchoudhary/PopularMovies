@@ -2,7 +2,9 @@ package com.udacity.android.popularmovies.model;
 
 import java.util.List;
 
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -17,9 +19,11 @@ public class MovieReviews {
     @SerializedName("page")
     @Expose
     private Integer page;
+
     @SerializedName("results")
     @Expose
     private List<ReviewResult> results = null;
+
     @SerializedName("total_pages")
     @Expose
     private Integer totalPages;
@@ -34,6 +38,12 @@ public class MovieReviews {
         this.totalPages = totalPages;
         this.totalResults = totalResults;
     }
+
+    @Ignore
+    public MovieReviews() {
+
+    }
+
 
     public Integer getId() {
         return id;

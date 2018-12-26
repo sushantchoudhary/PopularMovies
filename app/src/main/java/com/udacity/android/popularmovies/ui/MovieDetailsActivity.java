@@ -51,7 +51,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView mReleaseYear;
     private TextView mRating;
     private TextView mPlotSynopsis;
+    private TextView mReviews;
     private MovieRecord movieRecord;
+    private Menu mFavMenu;
     private TextView mErrorMessageDisplay;
     private ConstraintLayout mMovieDetailsLayout;
     private ImageView mMoviePosterLargeIV;
@@ -59,8 +61,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ProgressBar mLoadingIndicator;
     private RecyclerView mTrailerRecyclerView;
     private TrailerGalleryAdapter trailerAdapter;
-    private Menu mFavMenu;
     private List<Result> mMovieVideos;
+    private MovieReviews mMovieReviews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mReleaseYear = findViewById(R.id.release_year);
         mRating = findViewById(R.id.movie_rating);
         mPlotSynopsis = findViewById(R.id.plot_synopsis);
+        mReviews = findViewById(R.id.reviewText);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
 
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
@@ -102,10 +106,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (intentFromHome.hasExtra(Intent.EXTRA_TEXT)) {
                     movieRecord = intentFromHome.getParcelableExtra(Intent.EXTRA_TEXT);
 //                    setupMovieDetailFromViewModel(movieRecord);
+                    loadMovieReviewsInDB();
                     populateUI(movieRecord);
                 }
             }
         }
+        /**
+         * Loading this view at the end to allow Youtube player render
+         */
         loadMovieTrailer(movieRecord);
     }
 
@@ -331,6 +339,61 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MovieVideos> call, Throwable t) {
+                mLoadingIndicator.setVisibility(View.INVISIBLE);
+                mMovieDetailsLayout.setVisibility(View.INVISIBLE);
+                showErrorMessage();
+            }
+        });
+    }
+
+    private void loadMovieReviewsInDB() {
+        final Call<MovieReviews> movieReviewsCall;
+
+        ApiService apiService = RetroClient.getApiService();
+        /**
+         * Call movie api to fetch reviews
+         */
+        movieReviewsCall = apiService.getMovieReview(movieRecord.getId(), BuildConfig.ApiKey);
+
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+
+        movieReviewsCall.enqueue(new Callback<MovieReviews>() {
+            @Override
+            public void onResponse(Call<MovieReviews> call, Response<MovieReviews> response) {
+
+                if (response.isSuccessful()) {
+                    mLoadingIndicator.setVisibility(View.INVISIBLE);
+
+                    if (response.body() != null) {
+                        mMovieReviews = response.body();
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            mDB.movieReviewsDao().insertMovieReview(mMovieReviews);
+                        });
+                        /**
+                         * Updating UI with reviews from DB
+                         */
+                        mDB.movieReviewsDao().loadReviewById(movieRecord.getId()).observe(MovieDetailsActivity.this, new Observer<MovieReviews>() {
+                            @Override
+                            public void onChanged(@Nullable MovieReviews movieReviews) {
+                                runOnUiThread(() -> {
+                                    StringBuilder sbl = new StringBuilder();
+                                    //TODO Use ConstraintSet to add text views dynamically
+                                    for(ReviewResult result : movieReviews.getResults()) {
+                                        sbl.append(result.getContent()+ "\n" + "\n");
+                                    }
+                                    mReviews.setText(sbl.toString());
+
+                                });
+                            }
+                        });
+                    } else {
+                        throw new HttpException(response);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieReviews> call, Throwable t) {
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
                 mMovieDetailsLayout.setVisibility(View.INVISIBLE);
                 showErrorMessage();
