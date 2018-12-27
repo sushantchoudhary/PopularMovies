@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +35,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,6 +50,7 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
     private FavMoviesAdapter favMoviesAdapter;
+    private ConstraintLayout mFavEmptyLayout;
     private SortType preferredSort;
     private List<Long> allMovies = Collections.emptyList() ;
 
@@ -62,6 +63,8 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
 
         mFavMovieLayout = findViewById(R.id.recyclerview_movies);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
+        mFavEmptyLayout = findViewById(R.id.fav_empty_state);
+
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, SPAN_COUNT,
                 GridLayoutManager.VERTICAL, false);
@@ -78,6 +81,7 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
             // Restore value of members from saved state
             setupFavViewModel();
         } else {
+            // FIXME Update database schema to store all the movies in DB and avoid API call/DB write on every transition to Favourites
             loadAllMovies();
         }
     }
@@ -149,6 +153,9 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
         MovieSnapshotViewModel viewModel = ViewModelProviders.of(this).get(MovieSnapshotViewModel.class);
         viewModel.getMovies().observe(this, movieRecords -> {
             Log.d(TAG, "Updating movies from LiveData in ViewModel");
+            if(movieRecords.isEmpty()) {
+                setContentView(R.layout.empty_state_fav);
+            }
             favMoviesAdapter = new FavMoviesAdapter(movieRecords, FavMoviesActivity.this);
             mFavMovieLayout.setAdapter(favMoviesAdapter);
             //TODO : Fix this call {Skipping layout, no adapter found..}
@@ -160,9 +167,10 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
     protected void onRestart() {
         super.onRestart();
         IsRestarting = true;
+        /**
+         * View model takes care of updating UI after unfavourite and navigate back
+         */
         setupFavViewModel();
-        //FIXME Handle view sync after updating favorite status, App crashes when unfavorite is selected on FavActivity
-
     }
 
     private void showMoviewGridView() {
@@ -250,7 +258,7 @@ public class FavMoviesActivity extends AppCompatActivity implements FavMoviesAda
                 });
 
             });
-            //FIXME State need to be updated to handle storage better
+            //TODO State need to be updated to handle storage better
             return null;
         }
 

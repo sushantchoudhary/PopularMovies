@@ -3,7 +3,6 @@ package com.udacity.android.popularmovies.ui;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -218,12 +217,7 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesAdap
         new AlertDialog.Builder(this)
                 .setTitle(R.string.network_error)
                 .setMessage(R.string.network_error_msg)
-                .setNegativeButton(R.string.error_dismiss_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                }).create().show();
+                .setNegativeButton(R.string.error_dismiss_button, (dialog, which) -> finish()).create().show();
     }
 
     private class MovieStoreCallback implements Callback<MovieStore> {

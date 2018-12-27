@@ -21,4 +21,6 @@
     <string name="add_favorite">Add Favorite</string>
     <string name="reviews"><u>Reviews</u></string>
     <string name="review_placeholder">No reviews found !</string>
+    <string name="no_favs">Uh oh, no favourites found!</string>
+
 </resources>

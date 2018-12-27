@@ -33,6 +33,8 @@ import com.udacity.android.popularmovies.network.RetroClient;
 import com.udacity.android.popularmovies.utils.AppExecutors;
 import com.udacity.android.popularmovies.viewmodel.MovieDetailViewModelFactory;
 import com.udacity.android.popularmovies.viewmodel.MovieDetailsViewModel;
+import com.udacity.android.popularmovies.viewmodel.ReviewViewModel;
+import com.udacity.android.popularmovies.viewmodel.ReviewViewModelFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.HttpException;
@@ -98,21 +100,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             movieRecord = savedInstanceState.getParcelable("movieRecord");
+            /**
+             * Updating UI from view model
+             */
             setupMovieDetailFromViewModel(movieRecord);
-//            populateUI(movieRecord);
         } else {
             Intent intentFromHome = getIntent();
             if (intentFromHome != null) {
                 if (intentFromHome.hasExtra(Intent.EXTRA_TEXT)) {
                     movieRecord = intentFromHome.getParcelableExtra(Intent.EXTRA_TEXT);
 //                    setupMovieDetailFromViewModel(movieRecord);
+                    /**
+                     * Fetching movie reviews from API on movie details loading
+                     */
                     loadMovieReviewsInDB();
                     populateUI(movieRecord);
                 }
             }
         }
         /**
-         * Loading this view at the end to allow Youtube player render
+         * Loading this view at the end to allow slow Youtube player render
          */
         loadMovieTrailer(movieRecord);
     }
@@ -126,6 +133,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 viewModel.getMovie().removeObserver(this);
                 Log.d(TAG, "Receiving database update from LiveData");
                 populateUI(movieRecord);
+                setupReviewsUI();
+            }
+        });
+    }
+
+    private void setupReviewsUI() {
+        ReviewViewModelFactory factory = new ReviewViewModelFactory(mDB, movieRecord.getId());
+        final ReviewViewModel viewModel = ViewModelProviders.of(this, factory).get(ReviewViewModel.class);
+        viewModel.getMovieReview().observe(this, new Observer<MovieReviews>() {
+            @Override
+            public void onChanged(@Nullable MovieReviews movieReviews) {
+                runOnUiThread(() -> {
+                    StringBuilder sbl = new StringBuilder();
+                    //TODO Use ConstraintSet to add text views dynamically
+                    for(ReviewResult result : movieReviews.getResults()) {
+                        sbl.append(result.getContent()+ "\n" + "\n");
+                    }
+                    mReviews.setText(sbl.toString());
+
+                });
             }
         });
     }
@@ -366,24 +393,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                     if (response.body() != null) {
                         mMovieReviews = response.body();
-                        AppExecutors.getInstance().diskIO().execute(() -> {
-                            mDB.movieReviewsDao().insertMovieReview(mMovieReviews);
-                        });
+                        //TODO Check data inserted before setting up UI
+                        mDB.movieReviewsDao().insertMovieReview(mMovieReviews);
+
                         /**
                          * Updating UI with reviews from DB
                          */
-                        mDB.movieReviewsDao().loadReviewById(movieRecord.getId()).observe(MovieDetailsActivity.this, new Observer<MovieReviews>() {
+                        runOnUiThread(new Runnable() {
                             @Override
-                            public void onChanged(@Nullable MovieReviews movieReviews) {
-                                runOnUiThread(() -> {
-                                    StringBuilder sbl = new StringBuilder();
-                                    //TODO Use ConstraintSet to add text views dynamically
-                                    for(ReviewResult result : movieReviews.getResults()) {
-                                        sbl.append(result.getContent()+ "\n" + "\n");
-                                    }
-                                    mReviews.setText(sbl.toString());
+                            public void run() {
+                                setupReviewsUI();
 
-                                });
                             }
                         });
                     } else {
@@ -400,6 +420,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
     private void showErrorMessage() {

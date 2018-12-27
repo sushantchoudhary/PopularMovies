@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/fav_empty_state">
+    <android.support.v7.widget.CardView android:layout_width="match_parent"
+                                        android:layout_height="160dp"
+                                        app:cardBackgroundColor="@color/colorPrimary">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:background="@drawable/baseline_mood_bad_24"
+                   android:layout_gravity="center_horizontal"
+                   android:layout_margin="32dp"
+        />
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+        android:textStyle="bold|normal"
+        android:hint="@string/no_favs"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:textSize="16sp"
+        android:typeface="monospace"/>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

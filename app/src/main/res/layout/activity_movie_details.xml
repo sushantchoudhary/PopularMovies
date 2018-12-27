@@ -63,6 +63,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/movie_poster"
                 app:layout_constraintBottom_toTopOf="@id/plot_synopsis"
                 android:id="@+id/detail_divider"/>
+
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     app:layout_constraintStart_toEndOf="@id/movie_poster"
+                     app:layout_constraintEnd_toStartOf="@id/movie_rating"
+                     app:layout_constraintTop_toTopOf="@id/movie_rating"
+                     app:layout_constraintBottom_toBottomOf="@id/movie_rating"
+                     android:layout_margin="8dp"
+                     android:id="@+id/rating_icon"
+                     android:background="@drawable/baseline_grade"
+        />
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,6 +87,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_divider" android:layout_margin="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/trailer_detail_divider"/>
+
+
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     app:layout_constraintStart_toEndOf="@id/movie_poster"
+                     app:layout_constraintEnd_toStartOf="@id/release_year"
+                     app:layout_constraintTop_toTopOf="@id/release_year"
+                     app:layout_constraintBottom_toBottomOf="@id/release_year"
+                     android:layout_margin="8dp"
+                     android:id="@+id/release_icon"
+                     android:background="@drawable/baseline_history"
+
+        />
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

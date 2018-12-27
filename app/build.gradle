@@ -18,12 +18,17 @@ android {
         debug {
             buildConfigField 'String', "ApiKey", PopularMovies_ApiKey
             resValue 'string', "api_key", PopularMovies_ApiKey
+            buildConfigField 'String', "YouTubeKey", YoutubeData_ApiKey
+            resValue 'string', "youtube_key", YoutubeData_ApiKey
+
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "ApiKey", PopularMovies_ApiKey
             resValue 'string', "api_key", PopularMovies_ApiKey
+            buildConfigField 'String', "YouTubeKey", YoutubeData_ApiKey
+            resValue 'string', "youtube_key", YoutubeData_ApiKey
         }
     }
     compileOptions {

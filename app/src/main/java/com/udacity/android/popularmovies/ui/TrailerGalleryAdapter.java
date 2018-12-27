@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.udacity.android.popularmovies.BuildConfig;
 import com.udacity.android.popularmovies.R;
 import com.udacity.android.popularmovies.model.Result;
 
@@ -69,10 +70,8 @@ public class TrailerGalleryAdapter extends RecyclerView.Adapter<TrailerGalleryAd
 
         trailerViewHolder.setIsRecyclable(false);
         final YouTubePlayerFragment youtubeFragment = trailerViewHolder.fragment;
-        //TODO : Save this key securely
-
         try {
-            youtubeFragment.initialize("AIzaSyDfGzKHA-q4bldzopjnBdV7g2EG1lQIH5Q",
+            youtubeFragment.initialize(BuildConfig.YouTubeKey,
                     new YouTubePlayer.OnInitializedListener() {
                         @Override
                         public void onInitializationSuccess(YouTubePlayer.Provider provider,
