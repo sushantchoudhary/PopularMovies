@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,8 +45,6 @@ import java.util.List;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static AppDatabase mDB;
     public YouTubePlayer youTubePlayer;
     public boolean isYouTubePlayerFullScreen;
@@ -65,6 +64,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TrailerGalleryAdapter trailerAdapter;
     private List<Result> mMovieVideos;
     private MovieReviews mMovieReviews;
+
+
+    private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
+    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TRAILER_SHARE_HASHTAG = "#PopulatMovies";
+    private static String movieTrailerURL;
 
 
     @Override
@@ -260,7 +266,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
             return true;
         }
 
+        /* Share menu item clicked */
+        if (itemId == R.id.action_share) {
+            Intent shareIntent = createShareTrailerIntent();
+            startActivity(shareIntent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private Intent createShareTrailerIntent() {
+        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText(movieTrailerURL + TRAILER_SHARE_HASHTAG)
+                .getIntent();
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        return shareIntent;
     }
 
     @Override
@@ -356,7 +379,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         trailerAdapter = new TrailerGalleryAdapter(MovieDetailsActivity.this, mMovieVideos);
                         mTrailerRecyclerView.setAdapter(trailerAdapter);
                         trailerAdapter.notifyDataSetChanged();
-
+                        /**
+                         * Storing first trailer URL to pass to share action
+                         */
+                        if(!mMovieVideos.isEmpty()) {
+                            movieTrailerURL = YOUTUBE_URL+mMovieVideos.get(0).getKey();
+                        }
 
                     } else {
                         throw new HttpException(response);
